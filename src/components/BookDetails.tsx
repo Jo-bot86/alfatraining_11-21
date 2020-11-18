@@ -2,6 +2,7 @@ import React, {Fragment, ReactElement, useEffect, useState} from 'react';
 import axios, {AxiosResponse} from 'axios';
 
 import Book from '../types/Book'
+import LoadingSpinner from './shared/LoadingSpinner'
 
 interface Props {
   book: Book
@@ -19,7 +20,7 @@ export default function BookDetails(props: Props): ReactElement {
       .then((response: AxiosResponse<Book>) => setBook(response.data))
   }, [props.book.isbn])
 
-  if (!book) {return <p>Lade</p>}
+  if (!book) {return <LoadingSpinner name={`Buch ${props.book.isbn}`} />}
 
   const onDelete = () => {
     axios({
