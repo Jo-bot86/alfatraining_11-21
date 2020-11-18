@@ -1,4 +1,5 @@
-import React, {Fragment, ReactElement} from 'react';
+import React, {Fragment, ReactElement, useEffect, useState} from 'react';
+import axios, {AxiosResponse} from 'axios';
 
 import Book from '../types/Book'
 
@@ -8,7 +9,25 @@ interface Props {
 }
 
 export default function BookDetails(props: Props): ReactElement {
-  const book = props.book;
+  const [book, setBook] = useState<Book>()
+
+  useEffect(() => {
+    axios({
+      method: 'get',
+      url: `https://api3.angular-buch.com/books/${props.book.isbn}`
+    })
+      .then((response: AxiosResponse<Book>) => setBook(response.data))
+  }, [props.book.isbn])
+
+  if (!book) {return <p>Lade</p>}
+
+  const onDelete = () => {
+    axios({
+      method: 'delete',
+      url: `https://api3.angular-buch.com/books/${props.book.isbn}`
+    })
+      .then(props.showList)
+  }
 
   const getRatings = () => Array.from(Array(book.rating || 0).keys())
 
@@ -34,7 +53,7 @@ export default function BookDetails(props: Props): ReactElement {
           </div>
           <div className="four wide column">
             <h4>Erschienen</h4>
-            <p>{book.published.toLocaleDateString()}</p>
+            <p>{new Date(book.published).toLocaleDateString()}</p>
           </div>
           <div className="four wide column">
             <h4>Rating</h4>
@@ -51,7 +70,8 @@ export default function BookDetails(props: Props): ReactElement {
           )}
         </div>
       </div>
-      <button onClick={props.showList} className="ui red button">Back</button>
+      <button onClick={props.showList} className="ui button">Back</button>
+      <button onClick={onDelete} className="ui red button">Delete</button>
     </>
   )
 }
