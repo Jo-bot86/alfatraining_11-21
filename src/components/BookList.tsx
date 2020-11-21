@@ -1,34 +1,24 @@
-import React, {useState, useEffect, ReactElement} from 'react';
-import axios, {AxiosResponse} from 'axios';
+import React, {ReactElement} from 'react';
 
 import BookListItem from './BookListItem'
 import Book from '../types/Book'
 import LoadingSpinner from './shared/LoadingSpinner';
+import {useBookApi, bookApi} from '../shared/BookApi'
 
 interface Props {
   showDetails: (book: Book) => void
 }
 
 export default function BookList(props: Props): ReactElement {
-  const [books, setBooks] = useState<Book[]>()
 
-  const getBooks = () => {
-    axios({
-      method: 'get',
-      url: 'https://api3.angular-buch.com/books'
-    })
-      .then((response: AxiosResponse<Book[]>) => setBooks(response.data))
-  }
-
-  useEffect(getBooks, [])
+  const [books, setBooks] = useBookApi<Book[]>('books')
 
   if (!books) {return <LoadingSpinner name="Bücher" />}
 
   const onReset = () => {
-    axios({
-      method: 'delete',
-      url: 'https://api3.angular-buch.com/books'
-    }).then(getBooks)
+    bookApi<string>('delete', 'books', () => {
+      bookApi<Book[]>('get', 'books', setBooks)
+    })
   }
 
   return books.length // !== 0

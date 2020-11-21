@@ -1,8 +1,8 @@
-import React, {Fragment, ReactElement, useEffect, useState} from 'react';
-import axios, {AxiosResponse} from 'axios';
+import React, {Fragment, ReactElement} from 'react';
 
 import Book from '../types/Book'
 import LoadingSpinner from './shared/LoadingSpinner'
+import {useBookApi, bookApi} from '../shared/BookApi'
 
 interface Props {
   book: Book
@@ -10,24 +10,12 @@ interface Props {
 }
 
 export default function BookDetails(props: Props): ReactElement {
-  const [book, setBook] = useState<Book>()
-
-  useEffect(() => {
-    axios({
-      method: 'get',
-      url: `https://api3.angular-buch.com/books/${props.book.isbn}`
-    })
-      .then((response: AxiosResponse<Book>) => setBook(response.data))
-  }, [props.book.isbn])
+  const book = useBookApi<Book>(`books/${props.book.isbn}`)[0]
 
   if (!book) {return <LoadingSpinner name={`Buch ${props.book.isbn}`} />}
 
   const onDelete = () => {
-    axios({
-      method: 'delete',
-      url: `https://api3.angular-buch.com/books/${props.book.isbn}`
-    })
-      .then(props.showList)
+    bookApi('delete', `books/${props.book.isbn}`, props.showList)
   }
 
   const getRatings = () => Array.from(Array(book.rating || 0).keys())
