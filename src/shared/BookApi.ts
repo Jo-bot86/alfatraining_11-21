@@ -1,7 +1,10 @@
-import {useState, useEffect} from 'react';
 import axios, {AxiosResponse, Method} from 'axios';
+import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
-type Setter<T> = (data: T) => void
+import {factoryRawToBook, isBookBase} from '../types/Book';
+
+// local utility type
+type SetState<T> = Dispatch<SetStateAction<T>>
 
 /*
  * Abstracts away both needs for api calls,
@@ -19,7 +22,7 @@ type Setter<T> = (data: T) => void
  * @param path [string], relative path to baseUrl
  * @return, Response Data
 */
-export function useBookApi<T>(path: string): [T | undefined, Setter<T>] {
+export function useBookApi<T>(path: string): [T | undefined, SetState<T | undefined>] {
   const [data, setData] = useState<T>();
 
   useEffect(() => {
@@ -41,7 +44,7 @@ export function useBookApi<T>(path: string): [T | undefined, Setter<T>] {
  * @param data [function], callback, gets `response.data` as an argument
  * @param data [object], body data
 */
-export function bookApi<T>(method: Method, path: string, callback: Setter<T>, data = {}): void {
+export function bookApi<T>(method: Method, path: string, callback: (data: T) => void, data = {}): void {
   const baseUrl = 'https://api3.angular-buch.com/secure'
 
   axios({
@@ -52,3 +55,20 @@ export function bookApi<T>(method: Method, path: string, callback: Setter<T>, da
   })
     .then((response: AxiosResponse<T>) => callback(response.data))
 }
+
+/*
+* Axios Interceptor
+* Factory BookWithDateString to Book
+*/
+axios.interceptors.response.use(
+  (response: AxiosResponse) => {
+    if (response.data) {
+      if (Array.isArray(response.data) && response.data.every(isBookBase)) {
+        response.data = response.data.map(factoryRawToBook)
+      } else if (isBookBase(response.data)) {
+        response.data = factoryRawToBook(response.data)
+      }
+    }
+    return response;
+  }
+);

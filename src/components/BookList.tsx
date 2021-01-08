@@ -1,7 +1,7 @@
 import React, {ReactElement} from 'react';
 
 import BookListItem from './BookListItem'
-import Book from '../types/Book'
+import {Book} from '../types/Book'
 import LoadingSpinner from './shared/LoadingSpinner';
 import {useBookApi, bookApi} from '../shared/BookApi'
 

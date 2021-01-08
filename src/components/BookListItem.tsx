@@ -1,6 +1,6 @@
 import React, {ReactElement} from 'react'
 
-import Book from '../types/Book'
+import {Book} from '../types/Book'
 
 interface Props {
   book: Book
