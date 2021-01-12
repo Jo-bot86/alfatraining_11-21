@@ -19,9 +19,12 @@ export default function BookList(): ReactElement {
 
   return books.length // !== 0
     ? (
-      <div className="ui middle aligned selection divided list">
-        {books.map(book => <BookListItem book={book} key={book.isbn} />)}
-      </div>
+      <>
+        <h2>Book List</h2>
+        <div className="ui middle aligned selection divided list">
+          {books.map(book => <BookListItem book={book} key={book.isbn} />)}
+        </div>
+      </>
     )
     : (
       <div className="ui message">
