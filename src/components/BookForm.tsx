@@ -1,19 +1,24 @@
-import React, {useState, SyntheticEvent} from 'react';
-import {useHistory} from 'react-router-dom'
-import css from './BookForm.module.css'
+import {Method} from 'axios';
+import React, {ReactElement, useState} from 'react';
+import {useHistory} from 'react-router-dom';
+import {bookApi} from '../shared/BookApi';
+import {BookWithDateString} from '../types/Book';
+import css from './BookForm.module.css';
 
-import {bookApi} from '../shared/BookApi'
+interface Props extends BookWithDateString {
+  isEdit: boolean
+}
 
-export default function BookForm(): JSX.Element {
+export default function BookForm(props: Props): ReactElement {
   const buildThumbnail = (title = '', url = '') => ({title, url})
 
-  const [title, setTitle] = useState('')
-  const [subtitle, setSubtitle] = useState('')
-  const [isbn, setIsbn] = useState(Math.floor(Math.random() * 8999999999 + 1111111111).toString())
-  const [description, setDescription] = useState('')
-  const [authors, setAuthors] = useState([''])
-  const [thumbnails, setThumbnails] = useState([buildThumbnail('', 'https://ng-buch.de/public/monkey-thinking.svg')])
-  const [published, setPublished] = useState('')
+  const [title, setTitle] = useState(props.title)
+  const [subtitle, setSubtitle] = useState(props.subtitle || '')
+  const [isbn, setIsbn] = useState(props.isbn)
+  const [description, setDescription] = useState(props.description || '')
+  const [authors, setAuthors] = useState(props.authors)
+  const [thumbnails, setThumbnails] = useState(props.thumbnails || [buildThumbnail('', '')])
+  const [published, setPublished] = useState(props.published)
 
   const history = useHistory()
 
@@ -21,7 +26,12 @@ export default function BookForm(): JSX.Element {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    bookApi('post', 'books', () => history.push('/books'), book())
+    const [method, path]: [Method, string] =
+      props.isEdit
+        ? ['put', `books/${props.isbn}`]
+        : ['post', 'books']
+
+    bookApi(method, path, () => history.push(`/${path}`), book())
   }
 
   const onChangeAuthor = (value: string, index: number) => {
@@ -77,6 +87,7 @@ export default function BookForm(): JSX.Element {
       <label>Isbn</label>
       <input
         placeholder="Isbn"
+        readOnly={props.isEdit}
         required
         pattern="\d{10}|\d{13}"
         title="Isbn Nummer kann 10 oder 13 Zeichen lang sein"
