@@ -5,11 +5,7 @@ import {Book} from '../types/Book'
 import LoadingSpinner from './shared/LoadingSpinner';
 import {useBookApi, bookApi} from '../shared/BookApi'
 
-interface Props {
-  showDetails: (book: Book) => void
-}
-
-export default function BookList(props: Props): ReactElement {
+export default function BookList(): ReactElement {
 
   const [books, setBooks] = useBookApi<Book[]>('books')
 
@@ -24,7 +20,7 @@ export default function BookList(props: Props): ReactElement {
   return books.length // !== 0
     ? (
       <div className="ui middle aligned selection divided list">
-        {books.map(book => <BookListItem showDetails={props.showDetails} book={book} key={book.isbn} />)}
+        {books.map(book => <BookListItem book={book} key={book.isbn} />)}
       </div>
     )
     : (

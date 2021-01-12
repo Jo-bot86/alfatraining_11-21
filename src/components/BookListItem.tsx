@@ -1,17 +1,17 @@
 import React, {ReactElement} from 'react'
+import {Link} from 'react-router-dom';
 
 import {Book} from '../types/Book'
 
 interface Props {
   book: Book
-  showDetails: (book: Book) => void
 }
 
 export default function BookListItem(props: Props): ReactElement {
   const book = props.book
 
   return (
-    <div onClick={() => props.showDetails(book)} key={book.isbn} className="item">
+    <Link to={`/books/${props.book.isbn}`} className="item">
       {
         book.thumbnails && book.thumbnails.length !== 0 &&
         <img className="ui tiny image" alt="" src={book.thumbnails[0].url} />
@@ -30,6 +30,6 @@ export default function BookListItem(props: Props): ReactElement {
           ISBN {book.isbn}
         </div>
       </div>
-    </div>
+    </Link>
   )
 }

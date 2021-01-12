@@ -1,25 +1,39 @@
-import React, {ReactElement, useState} from 'react';
+import React, {ReactElement} from 'react';
+import {BrowserRouter as Router, Route, NavLink, Switch, Redirect} from 'react-router-dom'
 
 import BookList from './BookList'
 import BookDetails from './BookDetails'
-import {Book} from '../types/Book'
+
+import Home from './Home'
 
 export default function App(): ReactElement {
-  const [book, setBook] = useState<Book>();
-
-  const showList = () => {
-    setBook(undefined)
-  };
-
-  const showDetails = (book_: Book) => {
-    setBook(book_)
-  };
 
   return (
-    <div className="ui container">
-      {book
-        ? <BookDetails showList={showList} book={book} />
-        : <BookList showDetails={showDetails} />}
-    </div>
+    <Router>
+      <div className="ui menu">
+        <NavLink to="/home" className="item" activeClassName="active">Home</NavLink>
+        <NavLink to="/books" className="item" activeClassName="active">Books</NavLink>
+      </div>
+
+      <div className="ui container">
+        <Switch>
+          <Route path='/books/:isbn'>
+            <BookDetails />
+          </Route>
+
+          <Route path='/books'>
+            <BookList />
+          </Route>
+
+          <Route path='/home'>
+            <Home />
+          </Route>
+
+          <Route exact path='/'>
+            <Redirect to="/home" />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   )
 }
