@@ -2,8 +2,8 @@ import React, {ReactElement} from 'react';
 
 export default function App(): ReactElement {
   return (
-    <p>
-      Edit <code>src/App.tsx</code> and save to reload.
-    </p>
+    <div className="ui active inverted dimmer">
+      <div className="ui text loader large">Lade BookShelf ...</div>
+    </div>
   );
 }
