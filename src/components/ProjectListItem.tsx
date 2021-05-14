@@ -1,21 +1,18 @@
 import React, {ReactElement} from "react"
 import Project from "../types/Project"
+import ProjectProgress from "./ProjectProgress"
+import ProjectTimes from "./ProjectTimes"
 
 interface Props {
   project: Project
+  onShowDetails: (project: Project) => void
 }
 
 function ProjectListItem(props: Props): ReactElement {
   const project = props.project
 
-  const progressBarClassMap = {
-    'is-completed': 'success',
-    'in-progress': 'warning',
-    'on-hold': 'error'
-  }
-
   return (
-    <div className="card">
+    <div onClick={() => {props.onShowDetails(project)}} className="card">
       <div className="item" style={{margin: 15}}>
         <h2 className="ui image header">
           <div className="content">
@@ -32,11 +29,7 @@ function ProjectListItem(props: Props): ReactElement {
                   </h4>
                 </td>
                 <td>
-                  <div className={`ui progress ${progressBarClassMap[project.status]}`}>
-                    <div className="bar" style={{width: `${project.progress}%`}}>
-                      <div className="progress">{project.progress}%</div>
-                    </div>
-                  </div>
+                  <ProjectProgress project={project} />
                 </td>
               </tr>
               <tr>
@@ -56,18 +49,7 @@ function ProjectListItem(props: Props): ReactElement {
                   </h4>
                 </td>
                 <td>
-                  <div className="ui relaxed divided list metadata">
-                    {project.times.map(({begin, end, title}) =>
-                      <div key={begin.toString()} className="item">
-                        <div className="content">
-                          <span className="header">
-                            {title}
-                          </span>
-                          {begin.toLocaleTimeString()} - {end.toLocaleTimeString()}
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                  <ProjectTimes project={project} />
                 </td>
               </tr>
               <tr>
