@@ -14,7 +14,7 @@ export default function ProjectTimes(props: Props): ReactElement {
             <span className="header">
               {title}
             </span>
-            {begin.toLocaleTimeString()} - {end.toLocaleTimeString()}
+            {new Date(begin).toLocaleTimeString()} - {new Date(end).toLocaleTimeString()}
           </div>
         </div>
       )}
