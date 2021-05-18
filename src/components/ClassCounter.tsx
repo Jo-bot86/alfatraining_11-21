@@ -10,6 +10,7 @@ interface State {
 
 export default class ClassCounter extends React.Component<Props, State> {
   intervalId!: number;
+  defaultTitle!: string;
 
   constructor(props: Props) {
     super(props)
@@ -18,10 +19,18 @@ export default class ClassCounter extends React.Component<Props, State> {
 
   componentDidMount(): void {
     this.intervalId = window.setInterval(this.onIncrement, 1000)
+    this.defaultTitle = document.title
+  }
+
+  componentDidUpdate(_prevProps: Props, prevState: State): void {
+    if (prevState.counter !== this.state.counter) {
+      document.title = `Counter: ${this.state.counter}`
+    }
   }
 
   componentWillUnmount(): void {
     window.clearInterval(this.intervalId)
+    document.title = this.defaultTitle
   }
 
   onIncrement = (): void => {

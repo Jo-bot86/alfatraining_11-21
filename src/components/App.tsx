@@ -7,6 +7,7 @@ import ProjectList from './ProjectList';
 
 export default function App(): ReactElement {
   const [project, setProject] = useState<Project>()
+  const [showCounter, setShowCounter] = useState(true)
 
   const onShowDetails = (project_: Project) => {
     setProject(project_)
@@ -18,8 +19,12 @@ export default function App(): ReactElement {
 
   return (
     <div className="ui container">
-      <FunctionalCounter />
-      <ClassCounter />
+      {showCounter && (
+        <>
+          <FunctionalCounter />
+          <ClassCounter />
+        </>
+      )}
       {project
         ? <ProjectDetails projectId={project.id} onShowList={onShowList} />
         : <ProjectList onShowDetails={onShowDetails} />}
