@@ -1,26 +1,13 @@
-import React, {ReactElement, useEffect, useState} from "react"
+import React, {ReactElement} from "react"
+import {useCounter} from "../hooks/UseCounter"
+import {useDocumentTitle} from "../hooks/UseDocumentTitle"
+import {useInterval} from "../hooks/UseInterval"
+
 
 function FunctionalCounter(): ReactElement {
-  const [counter, setCounter] = useState(0)
-
-  useEffect(() => {
-    const intervalId = window.setInterval(onIncrement, 1000)
-    return () => {
-      window.clearInterval(intervalId)
-    }
-  }, [])
-
-  useEffect(() => {
-    const defaultTitle = document.title
-    document.title = `Counter: ${counter}`
-    return () => {
-      document.title = defaultTitle
-    }
-  }, [counter])
-
-  const onIncrement = () => {
-    setCounter(currentCounter => currentCounter + 1)
-  }
+  const [counter, onIncrement] = useCounter()
+  useInterval(onIncrement)
+  useDocumentTitle(`Counter: ${counter}`)
 
   return (
     <div>

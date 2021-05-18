@@ -24,7 +24,7 @@ export default class ClassCounter extends React.Component<Props, State> {
 
   componentDidUpdate(_prevProps: Props, prevState: State): void {
     if (prevState.counter !== this.state.counter) {
-      document.title = `Counter: ${this.state.counter}`
+      // document.title = `Counter: ${this.state.counter}`
     }
   }
 
