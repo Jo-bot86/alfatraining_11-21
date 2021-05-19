@@ -1,5 +1,5 @@
-import React, {ReactElement, useEffect, useState} from "react"
-import axios, {AxiosResponse} from 'axios'
+import React, {ReactElement} from "react"
+import {useProjectApi} from "../shared/ProjectApi"
 import Project from "../types/Project"
 import ProjectProgress from "./ProjectProgress"
 import ProjectTimes from "./ProjectTimes"
@@ -10,14 +10,7 @@ interface Props {
 }
 
 function ProjectDetails(props: Props): ReactElement {
-  const [project, setProject] = useState<Project>()
-
-  useEffect(() => {
-    axios({method: 'get', url: `/api/projects/${props.projectId}`})
-      .then((response: AxiosResponse<Project>) => {
-        setProject(response.data)
-      })
-  }, [props.projectId])
+  const [project] = useProjectApi<Project>(`projects/${props.projectId}`)
 
   if (!project) {return <p>Lade</p>}
 

@@ -1,22 +1,15 @@
-import React, {ReactElement, useEffect, useState} from "react"
-import axios, {AxiosResponse} from 'axios'
-
-import ProjectListItem from "./ProjectListItem"
+import React, {ReactElement} from "react"
+import {useProjectApi} from "../shared/ProjectApi"
 import Project from "../types/Project"
+import ProjectListItem from "./ProjectListItem"
+
 
 interface Props {
   onShowDetails: (project: Project) => void
 }
 
 function ProjectList(props: Props): ReactElement {
-  const [projects, setProjects] = useState<Project[]>()
-
-  useEffect(() => {
-    axios({method: 'get', url: '/api/projects'})
-      .then((response: AxiosResponse<Project[]>) => {
-        setProjects(response.data)
-      })
-  }, [])
+  const [projects] = useProjectApi<Project[]>('projects')
 
   if (!projects) {return <p>Lade</p>}
 
