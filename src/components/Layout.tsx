@@ -1,5 +1,6 @@
 import React, {ReactElement} from 'react';
 import {NavLink} from 'react-router-dom';
+import ProjectForm from './ProjectForm';
 import Routes from './Routes';
 
 interface Props {
@@ -17,6 +18,7 @@ function Layout(props: Props): ReactElement {
       </div>
       <div className="ui container">
         {props.children}
+        <ProjectForm />
       </div>
     </>
   )
