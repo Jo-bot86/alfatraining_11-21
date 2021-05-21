@@ -51,6 +51,7 @@ function ProjectDetails(): ReactElement {
       </div>
       <div className="ui divider" />
       <Link className="ui red button" to="/projects">Back</Link>
+      <Link className="ui yellow button" to={`/projects/${projectId}/edit`}>Edit</Link>
     </>
   )
 }

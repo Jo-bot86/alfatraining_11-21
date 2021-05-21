@@ -2,8 +2,9 @@ import React, {ReactElement} from 'react';
 import {Route, Switch} from 'react-router-dom';
 import ClassCounter from './ClassCounter';
 import FunctionalCounter from './FunctionalCounter';
+import ProjectCreate from './ProjectCreate';
 import ProjectDetails from './ProjectDetails';
-import ProjectForm from './ProjectForm';
+import ProjectEdit from './ProjectEdit';
 import ProjectList from './ProjectList';
 
 function Routes(): ReactElement {
@@ -16,7 +17,10 @@ function Routes(): ReactElement {
         <ClassCounter />
       </Route>
       <Route path="/projects/new">
-        <ProjectForm />
+        <ProjectCreate />
+      </Route>
+      <Route path="/projects/:projectId/edit">
+        <ProjectEdit />
       </Route>
       <Route path="/projects/:projectId">
         <ProjectDetails />

@@ -1,7 +1,7 @@
 import React, {ReactElement, useState} from "react"
 import {useHistory} from "react-router"
 import {projectApi} from "../shared/ProjectApi"
-import Project, {Status} from "../types/Project"
+import {Status} from "../types/Project"
 import css from './ProjectForm.module.css'
 
 interface Time {
@@ -10,14 +10,24 @@ interface Time {
   end: string;
 }
 
-export default function ProjectForm(): ReactElement {
+interface Props {
+  title: string
+  img: string
+  status: Status
+  progress: string
+  times: Time[]
+  isEdit: boolean
+  projectId?: number
+}
+
+export default function ProjectForm(props: Props): ReactElement {
   const buildTime = () => ({title: '', begin: '', end: ''})
 
-  const [title, setTitle] = useState('')
-  const [img, setImg] = useState('')
-  const [status, setStatus] = useState<Status>("in-progress")
-  const [progress, setProgress] = useState('1')
-  const [times, setTimes] = useState<Time[]>([buildTime()])
+  const [title, setTitle] = useState(props.title)
+  const [img, setImg] = useState(props.img)
+  const [status, setStatus] = useState<Status>(props.status)
+  const [progress, setProgress] = useState(props.progress)
+  const [times, setTimes] = useState<Time[]>(props.times)
 
   const history = useHistory()
 
@@ -28,9 +38,12 @@ export default function ProjectForm(): ReactElement {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     console.log('submit', e, formProject());
-    projectApi('post', 'projects', () => {
-      history.push('/projects')
-    }, formProject())
+    projectApi(
+      props.isEdit ? 'put' : 'post',
+      props.isEdit ? `projects/${props.projectId}` : 'projects',
+      () => {history.push(props.isEdit ? `/projects/${props.projectId}` : '/projects')},
+      formProject()
+    )
   }
 
   const onChangeTimes = (index: number, key: string, newValue: string) => {
