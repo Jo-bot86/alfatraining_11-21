@@ -1,0 +1,24 @@
+.projectForm input:invalid {
+  background-color: #ffdddd !important;
+}
+
+.projectForm:invalid {
+  border: 5px solid #ffdddd;
+}
+
+.projectForm input:valid {
+  background-color: #ddffdd !important;
+}
+
+.projectForm:valid {
+  border: 5px solid #ddffdd;
+}
+
+.projectForm input:required {
+  border-color: #800000;
+  border-width: 3px;
+}
+
+.projectForm input:required:invalid {
+  border-color: #c00000;
+}

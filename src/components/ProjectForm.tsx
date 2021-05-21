@@ -2,6 +2,7 @@ import React, {ReactElement, useState} from "react"
 import {useHistory} from "react-router"
 import {projectApi} from "../shared/ProjectApi"
 import Project, {Status} from "../types/Project"
+import css from './ProjectForm.module.css'
 
 interface Time {
   title?: string;
@@ -55,24 +56,24 @@ export default function ProjectForm(): ReactElement {
   }
 
   return (
-    <form className="ui form" onSubmit={onSubmit}>
+    <form className={`ui form ${css.projectForm}`} onSubmit={onSubmit}>
       <h4 className="ui dividing header">Project Create</h4>
       <div className="field">
         <div className="field">
           <label>Titel</label>
           <div className="field">
-            <input value={title} onChange={(e) => setTitle(e.target.value)} type="text" placeholder="Titel" />
+            <input value={title} onChange={(e) => setTitle(e.target.value)} type="text" placeholder="Titel" required minLength={2} />
           </div>
         </div>
         <div className="field">
           <label>Image</label>
           <div className="field">
-            <input value={img} onChange={(e) => setImg(e.target.value)} type="url" placeholder="Image Url" />
+            <input value={img} onChange={(e) => setImg(e.target.value)} type="url" placeholder="Image Url" required />
           </div>
         </div>
         <div className="field">
           <label>Status</label>
-          <select value={status} onChange={(e) => setStatus(e.target.value as Status)} className="ui fluid dropdown">
+          <select value={status} onChange={(e) => setStatus(e.target.value as Status)} required className="ui fluid dropdown">
             <option value="in-progress">In Progress</option>
             <option value="on-hold">On Hold</option>
             <option value="is-completed">Is Completed</option>
@@ -80,7 +81,7 @@ export default function ProjectForm(): ReactElement {
         </div>
         <div className="field">
           <label>Progress {progress}%</label>
-          <input value={progress} onChange={(e) => setProgress(e.target.value)} style={{width: '100%'}} type="range" min="0" max="100" />
+          <input value={progress} onChange={(e) => setProgress(e.target.value)} style={{width: '100%'}} type="range" min="0" max="100" required />
         </div>
         <label>Times</label>
         <button onClick={onAddTime} type="button" className="ui button">+</button>
@@ -89,15 +90,15 @@ export default function ProjectForm(): ReactElement {
           <div key={index} className="inline fields">
             <div className="six wide field">
               <label>Titel</label>
-              <input value={time.title} onChange={(e) => onChangeTimes(index, 'title', e.target.value)} type="text" placeholder="Titel" />
+              <input value={time.title} onChange={(e) => onChangeTimes(index, 'title', e.target.value)} type="text" placeholder="Titel" minLength={2} />
             </div>
             <div className="four wide field">
               <label>Begin</label>
-              <input value={time.begin} onChange={(e) => onChangeTimes(index, 'begin', e.target.value)} type="date" placeholder="Begin" />
+              <input value={time.begin} onChange={(e) => onChangeTimes(index, 'begin', e.target.value)} type="date" placeholder="Begin" required />
             </div>
             <div className="four wide field">
               <label>End</label>
-              <input value={time.end} onChange={(e) => onChangeTimes(index, 'end', e.target.value)} type="date" placeholder="End" />
+              <input value={time.end} onChange={(e) => onChangeTimes(index, 'end', e.target.value)} type="date" placeholder="End" required />
             </div>
           </div>
         )}
