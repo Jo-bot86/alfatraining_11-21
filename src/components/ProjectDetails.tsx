@@ -3,15 +3,33 @@ import {useParams} from "react-router"
 import {Link} from "react-router-dom"
 
 import {useProjectApi} from "../shared/ProjectApi"
+import {DispatchActions, Store} from "../Store"
 import Project from "../types/Project"
 import ProjectProgress from "./ProjectProgress"
 import ProjectTimes from "./ProjectTimes"
 
-function ProjectDetails(): ReactElement {
+interface Props {
+  store: Store;
+  dispatch: DispatchActions;
+}
+
+function ProjectDetails(props: Props): ReactElement {
   const {projectId} = useParams<{projectId: string}>()
   const [project] = useProjectApi<Project>(`projects/${projectId}`)
 
   if (!project) {return <p>Lade</p>}
+
+  const onAddToFavorite = () => {
+    props.dispatch({type: 'ADD_TO_FAVORITES', project})
+  }
+
+  const onRemoveFromFavorite = () => {
+    props.dispatch({type: 'REMOVE_FROM_FAVORITES', project})
+  }
+
+  const countLikes = (): number => {
+    return props.store.favorites.filter(project_ => project_.id === project.id).length
+  }
 
   return (
     <>
@@ -48,6 +66,17 @@ function ProjectDetails(): ReactElement {
             <p>{project.status}</p>
           </div>
         </div>
+      </div>
+      <div className="ui buttons">
+        <div onClick={onAddToFavorite} className="ui icon button">
+          <i className="thumbs green up icon" />
+        </div>
+        <div onClick={onRemoveFromFavorite} className="ui icon button">
+          <i className="thumbs red down icon" />
+        </div>
+        <span className="ui button">
+          {countLikes()}
+        </span>
       </div>
       <div className="ui divider" />
       <Link className="ui red button" to="/projects">Back</Link>
