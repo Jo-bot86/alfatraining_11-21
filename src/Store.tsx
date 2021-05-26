@@ -1,3 +1,4 @@
+import React, {Context, Dispatch, ReactElement, useContext, useReducer, createContext} from "react";
 import Project from "./types/Project";
 
 export interface Store {
@@ -19,7 +20,6 @@ interface AddToFavorites {
 }
 
 type Actions = RemoveFromFavorites | AddToFavorites
-export type DispatchActions = React.Dispatch<Actions>
 
 export function reducer(store: Store, action: Actions): Store {
   switch (action.type) {
@@ -32,4 +32,22 @@ export function reducer(store: Store, action: Actions): Store {
   default:
     return store;
   }
+}
+
+interface StoreContext {
+  store: Store;
+  dispatch: Dispatch<Actions>;
+}
+
+const StoreContext = createContext({} as StoreContext);
+
+export const useStore = (): StoreContext => useContext(StoreContext);
+
+export function StoreProvider(props: {children: ReactElement}): ReactElement {
+  const [store, dispatch] = useReducer(reducer, initialStore);
+  return (
+    <StoreContext.Provider value={{store, dispatch}}>
+      {props.children}
+    </StoreContext.Provider>
+  );
 }

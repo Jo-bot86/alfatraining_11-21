@@ -3,32 +3,28 @@ import {useParams} from "react-router"
 import {Link} from "react-router-dom"
 
 import {useProjectApi} from "../shared/ProjectApi"
-import {DispatchActions, Store} from "../Store"
+import {useStore} from "../Store"
 import Project from "../types/Project"
 import ProjectProgress from "./ProjectProgress"
 import ProjectTimes from "./ProjectTimes"
 
-interface Props {
-  store: Store;
-  dispatch: DispatchActions;
-}
-
-function ProjectDetails(props: Props): ReactElement {
+function ProjectDetails(): ReactElement {
   const {projectId} = useParams<{projectId: string}>()
   const [project] = useProjectApi<Project>(`projects/${projectId}`)
+  const {dispatch, store} = useStore()
 
   if (!project) {return <p>Lade</p>}
 
   const onAddToFavorite = () => {
-    props.dispatch({type: 'ADD_TO_FAVORITES', project})
+    dispatch({type: 'ADD_TO_FAVORITES', project})
   }
 
   const onRemoveFromFavorite = () => {
-    props.dispatch({type: 'REMOVE_FROM_FAVORITES', project})
+    dispatch({type: 'REMOVE_FROM_FAVORITES', project})
   }
 
   const countLikes = (): number => {
-    return props.store.favorites.filter(project_ => project_.id === project.id).length
+    return store.favorites.filter(project_ => project_.id === project.id).length
   }
 
   return (
